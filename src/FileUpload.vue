@@ -12,7 +12,8 @@
   text-align: center;
   display: inline-block;
 }
-.file-uploads.file-uploads-html4 input[type="file"], .file-uploads.file-uploads-html5 label {
+.file-uploads.file-uploads-html4 input[type="file"],
+.file-uploads.file-uploads-html5 label {
   /* background fix ie  click */
   background: #fff;
   opacity: 0;
@@ -26,7 +27,8 @@
   width: 100%;
   height: 100%;
 }
-.file-uploads.file-uploads-html5 input[type="file"], .file-uploads.file-uploads-html4 label {
+.file-uploads.file-uploads-html5 input[type="file"],
+.file-uploads.file-uploads-html4 label {
   /* background fix ie  click */
   background: rgba(255, 255, 255, 0);
   overflow: hidden;
@@ -81,7 +83,7 @@ export default {
 
     maximum: {
       type: Number,
-      default() {
+      default () {
         return this.multiple ? 0 : 1
       }
     },
@@ -166,7 +168,7 @@ export default {
     }
   },
 
-  data() {
+  data () {
     return {
       files: this.value,
       features: {
@@ -181,6 +183,7 @@ export default {
       uploading: 0,
 
       destroy: false,
+      show: true
     }
   },
 
@@ -189,7 +192,7 @@ export default {
    * mounted
    * @return {[type]} [description]
    */
-  mounted() {
+  mounted () {
     let input = document.createElement('input')
     input.type = 'file'
     input.multiple = true
@@ -234,7 +237,7 @@ export default {
    * beforeDestroy
    * @return {[type]} [description]
    */
-  beforeDestroy() {
+  beforeDestroy () {
     // 已销毁
     this.destroy = true
 
@@ -252,7 +255,7 @@ export default {
      * uploaded 文件列表是否全部已上传
      * @return {[type]} [description]
      */
-    uploaded() {
+    uploaded () {
       let file
       for (let i = 0; i < this.files.length; i++) {
         file = this.files[i]
@@ -267,7 +270,7 @@ export default {
       return Object.assign(CHUNK_DEFAULT_OPTIONS, this.chunk)
     },
 
-    className() {
+    className () {
       return [
         'file-uploads',
         this.features.html5 ? 'file-uploads-html5' : 'file-uploads-html4',
@@ -280,21 +283,21 @@ export default {
 
 
   watch: {
-    active(active) {
+    active (active) {
       this.watchActive(active)
     },
 
-    dropActive() {
+    dropActive () {
       if (this.$parent) {
         this.$parent.$forceUpdate()
       }
     },
 
-    drop(value) {
+    drop (value) {
       this.watchDrop(value)
     },
 
-    value(files) {
+    value (files) {
       if (this.files === files) {
         return
       }
@@ -330,7 +333,7 @@ export default {
   methods: {
 
     // 清空
-    clear() {
+    clear () {
       if (this.files.length) {
         let files = this.files
         this.files = []
@@ -346,9 +349,16 @@ export default {
       }
       return true
     },
+    resetInput () {
+      this.clear()
+      this.show = false
+      this.$nextTick(() => {
+        this.show = true
+      })
+    },
 
     // 选择
-    get(id) {
+    get (id) {
       if (!id) {
         return false
       }
@@ -361,7 +371,7 @@ export default {
     },
 
     // 添加
-    add(_files, index = this.addIndex) {
+    add (_files, index = this.addIndex) {
       let files = _files
       let isArray = files instanceof Array
 
@@ -488,7 +498,7 @@ export default {
 
 
     // 添加表单文件
-    addInputFile(el) {
+    addInputFile (el) {
       let files = []
       if (el.files) {
         for (let i = 0; i < el.files.length; i++) {
@@ -513,7 +523,7 @@ export default {
 
 
     // 添加 DataTransfer
-    addDataTransfer(dataTransfer) {
+    addDataTransfer (dataTransfer) {
       let files = []
       if (dataTransfer.items && dataTransfer.items.length) {
         let items = []
@@ -562,7 +572,7 @@ export default {
 
 
     // 获得 entry
-    getEntry(entry, path = '') {
+    getEntry (entry, path = '') {
       return new Promise((resolve, reject) => {
         if (entry.isFile) {
           entry.file(function (file) {
@@ -603,7 +613,7 @@ export default {
     },
 
 
-    replace(id1, id2) {
+    replace (id1, id2) {
       let file1 = this.get(id1)
       let file2 = this.get(id2)
       if (!file1 || !file2 || file1 === file2) {
@@ -623,7 +633,7 @@ export default {
     },
 
     // 移除
-    remove(id) {
+    remove (id) {
       let file = this.get(id)
       if (file) {
         if (this.emitFilter(undefined, file)) {
@@ -649,7 +659,7 @@ export default {
     },
 
     // 更新
-    update(id, data) {
+    update (id, data) {
       let file = this.get(id)
       if (file) {
         let newFile = {
@@ -689,7 +699,7 @@ export default {
 
 
     // 预处理 事件 过滤器
-    emitFilter(newFile, oldFile) {
+    emitFilter (newFile, oldFile) {
       let isPrevent = false
       this.$emit('input-filter', newFile, oldFile, function () {
         isPrevent = true
@@ -699,7 +709,7 @@ export default {
     },
 
     // 处理后 事件 分发
-    emitFile(newFile, oldFile) {
+    emitFile (newFile, oldFile) {
       this.$emit('input-file', newFile, oldFile)
       if (newFile && newFile.fileObject && newFile.active && (!oldFile || !oldFile.active)) {
         this.uploading++
@@ -735,13 +745,13 @@ export default {
       }
     },
 
-    emitInput() {
+    emitInput () {
       this.$emit('input', this.files)
     },
 
 
     // 上传
-    upload(id) {
+    upload (id) {
       let file = this.get(id)
 
       // 被删除
@@ -827,7 +837,7 @@ export default {
       return file.chunk.upload()
     },
 
-    uploadPut(file) {
+    uploadPut (file) {
       let querys = []
       let value
       for (let key in file.data) {
@@ -842,7 +852,7 @@ export default {
       return this.uploadXhr(xhr, file, file.file)
     },
 
-    uploadHtml5(file) {
+    uploadHtml5 (file) {
       let form = new window.FormData()
       let value
       for (let key in file.data) {
@@ -863,7 +873,7 @@ export default {
       return this.uploadXhr(xhr, file, form)
     },
 
-    uploadXhr(xhr, _file, body) {
+    uploadXhr (xhr, _file, body) {
       let file = _file
       let speedTime = 0
       let speedLoaded = 0
@@ -1024,7 +1034,7 @@ export default {
 
 
 
-    uploadHtml4(_file) {
+    uploadHtml4 (_file) {
       let file = _file
       let onKeydown = function (e) {
         if (e.keyCode === 27) {
@@ -1233,7 +1243,7 @@ export default {
 
 
 
-    watchActive(active) {
+    watchActive (active) {
       let file
       let index = 0
       while ((file = this.files[index])) {
@@ -1259,7 +1269,7 @@ export default {
     },
 
 
-    watchDrop(_el) {
+    watchDrop (_el) {
       let el = _el
       if (!this.features.drop) {
         return
@@ -1297,7 +1307,7 @@ export default {
     },
 
 
-    onDragenter(e) {
+    onDragenter (e) {
       e.preventDefault()
       if (this.dropActive) {
         return
@@ -1317,7 +1327,7 @@ export default {
       }
     },
 
-    onDragleave(e) {
+    onDragleave (e) {
       e.preventDefault()
       if (!this.dropActive) {
         return
@@ -1327,15 +1337,15 @@ export default {
       }
     },
 
-    onDragover(e) {
+    onDragover (e) {
       e.preventDefault()
     },
 
-    onDocumentDrop() {
+    onDocumentDrop () {
       this.dropActive = false
     },
 
-    onDrop(e) {
+    onDrop (e) {
       e.preventDefault()
       this.addDataTransfer(e.dataTransfer)
     },
